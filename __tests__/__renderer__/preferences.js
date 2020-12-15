@@ -123,6 +123,11 @@ describe('Test Preferences Window', () =>
             changeItemValue('hours-per-day', '05:00');
             checkRenderedItem('hours-per-day');
         });
+        test('Change enable prefill to true', () =>
+        {
+            changeItemInputValue('enable-prefill-break-time', true);
+            checkRenderedItem('enable-prefill-break-time', isCheckBox);
+        });
         test('Change repetition to false', () =>
         {
             changeItemInputValue('repetition', false);

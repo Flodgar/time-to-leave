@@ -59,13 +59,13 @@ function _getDateFromWaivedWorkdayDb(dbKey)
 
 function _getOverallBalanceStartDate()
 {
-    const savedPreferences = getUserPreferences();
+    const savedPreferences = getLoadedPrefs();
     return savedPreferences['overall-balance-start-date'];
 }
 
 function _getHoursPerDay()
 {
-    const savedPreferences = getUserPreferences();
+    const savedPreferences = getLoadedPrefs();
     return savedPreferences['hours-per-day'];
 }
 
@@ -112,7 +112,7 @@ function _getFlexibleDayTotal(values)
 */
 function _getDayTotalsFromStores(firstDate, limitDate)
 {
-    const preferences = getUserPreferences();
+    const preferences = getLoadedPrefs();
     let totals = {};
 
     const getDateStrAndDateValue = (value, date) =>
@@ -152,6 +152,8 @@ function _getDayTotalsFromStores(firstDate, limitDate)
     return totals;
 }
 
+let loadedPrefs = null;
+
 /**
 * Computation of all time balance, including limitDay.
 * @param {Date} limitDate
@@ -168,7 +170,7 @@ async function computeAllTimeBalanceUntil(limitDate)
 
     let totals = _getDayTotalsFromStores(firstDate, limitDate);
 
-    const preferences = getUserPreferences();
+    const preferences = getLoadedPrefs();
     const hoursPerDay = _getHoursPerDay();
     let allTimeTotal = '00:00';
     let date = new Date(firstDate);
@@ -185,7 +187,14 @@ async function computeAllTimeBalanceUntil(limitDate)
         date.setDate(date.getDate() + 1);
         dateStr = getDateStr(date);
     }
+    loadedPrefs = null;
     return allTimeTotal;
+}
+
+function getLoadedPrefs()
+{
+    if (loadedPrefs === null) loadedPrefs = getUserPreferences();
+    return loadedPrefs;
 }
 
 /**

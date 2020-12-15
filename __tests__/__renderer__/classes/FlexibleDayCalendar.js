@@ -45,6 +45,18 @@ describe('FlexibleDayCalendar class Tests', () =>
     testPreferences['view'] = 'day';
     let calendar = CalendarFactory.getInstance(testPreferences);
 
+    test('BaseCalendar _calculateBreakEnd function', () =>
+    {
+        testPreferences['break-time-interval'] = '00:30';
+        expect(calendar._calculateBreakEnd('abcd')).toBe('23:59');
+        expect(calendar._calculateBreakEnd('10:00')).toBe('10:30');
+        expect(calendar._calculateBreakEnd('23:40')).toBe('23:59');
+
+        testPreferences['break-time-interval'] = '01:20';
+        expect(calendar._calculateBreakEnd('12:00')).toBe('13:20');
+        expect(calendar._calculateBreakEnd('22:50')).toBe('23:59');
+    });
+
     test('FlexibleDayCalendar starts with today\'s date', () =>
     {
         expect(calendar.constructor.name).toBe('FlexibleDayCalendar');
